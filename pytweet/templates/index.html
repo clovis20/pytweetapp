@@ -1,0 +1,38 @@
+<!DOCTYPE html5>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PyTweet</title>
+</head>
+<body>
+    <h1>Tweet List</h1>
+    <form id="tweet-form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Postar Tweet</button>
+    </form>
+    <div id="login-notification" style="display: none;">Faça login para poder postar!</div>
+    <ul>
+        {% for tweet in tweets %}
+        <li>{{ tweet.content }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var isAuthenticated = {{ user.is_authenticated|lower }};
+            var form = document.getElementById('tweet-form');
+            var loginNotification = document.getElementById('login-notification');
+    
+            form.addEventListener('submit', function(event) {
+                if (!isAuthenticated) {
+                    event.preventDefault();
+                    loginNotification.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
